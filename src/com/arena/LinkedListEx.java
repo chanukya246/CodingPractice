@@ -16,7 +16,6 @@ public class LinkedListEx {
     private Node last;
     private int size;
 
-    //addFirst
     public void addFirst(int item){
         Node node = new Node(item);
         if(isEmpty())
@@ -28,7 +27,6 @@ public class LinkedListEx {
         size++;
     }
 
-    //addLast
     public void addLast(int item){
        Node node = new Node(item);
        if(isEmpty())
@@ -44,7 +42,6 @@ public class LinkedListEx {
         return first == null;
     }
 
-    //deleteFisrt
     public void removeFirst(){
         if(isEmpty())
             throw new NoSuchElementException();
@@ -61,7 +58,6 @@ public class LinkedListEx {
         size--;
     }
 
-    //deleteLast
     public void removeLast(){
         if(isEmpty())
             throw new NoSuchElementException();
@@ -78,7 +74,6 @@ public class LinkedListEx {
         size--;
     }
 
-    //get previous of last
     private Node getPrevious(Node node){
         Node current = first;
         while(current != null){
@@ -88,12 +83,10 @@ public class LinkedListEx {
         return null;
     }
 
-    //contains
     public boolean contains(int item){
         return indexOf(item) != -1;
     }
 
-    //indexOf
     public int indexOf(int item){
         int index = 0;
         Node current = first;
@@ -107,12 +100,10 @@ public class LinkedListEx {
         return -1;
     }
 
-    //size
     public int size(){
         return size;
     }
 
-    //toArray
     public int[] toArray(){
         int[] array = new int[size];
         Node current = first;
@@ -122,6 +113,40 @@ public class LinkedListEx {
             current = current.next;
         }
         return array;
+    }
+
+    public void reverseList(){
+        if(isEmpty())
+            return;
+        Node previous = first;
+        Node current = first.next;
+        while (current != null){
+            Node next = current.next;
+            current.next = previous;
+            previous = current;
+            current = next;
+        }
+
+        last = first;
+        last.next = null;
+        first = previous;
+    }
+
+    public int getKthFromThEnd(int k){
+        if(isEmpty())
+            throw new IllegalStateException();
+
+        Node a = first;
+        Node b = first;
+        for(int i = 0; i < k - 1; i++) {
+            b = b.next;
+        if(b == null) throw new IllegalArgumentException();
+        }
+        while (b != last){
+            a = a.next;
+            b = b.next;
+        }
+        return a.value;
     }
 
 }
