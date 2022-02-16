@@ -1,5 +1,6 @@
-package com.arena;
+package com.arena.old;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class HashTableEx {
                 map.put(ch, count + 1);
             }
 
-            for (char ch :charArray)
+        for (char ch :charArray)
                 if(map.get(ch) == 1)
                     return ch;
 

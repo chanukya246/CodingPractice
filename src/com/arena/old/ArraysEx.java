@@ -1,6 +1,7 @@
-package com.arena;
+package com.arena.old;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ArraysEx {
 
@@ -69,6 +70,9 @@ public class ArraysEx {
     }
 
     public void intersect(int[] array1, int[] array2){
+
+        List<Integer> numsList1 = Arrays.asList(new Integer[] {});
+
         if(array1.length > 0 && array2.length > 0)
             for(int i = 0; i < array1.length; i++)
                 for(int j = 0; j < array2.length; j++)

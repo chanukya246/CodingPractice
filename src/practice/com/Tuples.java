@@ -1,9 +1,5 @@
 package practice.com;
 
-import javafx.geometry.Point3D;
-
-import java.awt.*;
-
 public class Tuples {
 
     public static void main (String[] args)
