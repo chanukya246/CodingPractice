@@ -84,6 +84,8 @@ public class ArraysEx {
     public void reverse(){
         int[] reverseItems = new int[items.length];
         int counter = 0;
+        if (counter == 0)
+
         for(int i = items.length; i > 0; i--)
             reverseItems[counter++] = items[i - 1];
         System.out.println("reverseItems: " + Arrays.toString(reverseItems));
