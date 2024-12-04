@@ -10,6 +10,7 @@ public class Day4 {
         startTime = System.currentTimeMillis();
         String input = "src/aoc/input/files/day4_ip.txt";
         day4part1(input);
+        day4part2(input);
     }
 
     private static void day4part1(String input) {
@@ -72,6 +73,58 @@ public class Day4 {
             }
             System.out.println("result: " + result);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void day4part2(String input) {
+        char[][] twoDarr = new char[140][140];
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(input))) {
+            loaded2dArray(bufferedReader, twoDarr);
+            int i = 0, result = 0;
+            while (i >= 0 && i < 140) {
+                int j = 0;
+                while (j >= 0 && j < 140) {
+                    if (twoDarr[i][j] == 'A') {
+                        int incDecBy1 = 1;
+
+                        boolean tl_safe = coordinatesSafe(i - incDecBy1, j - incDecBy1);
+                        boolean tr_safe = coordinatesSafe(i - incDecBy1, j + incDecBy1);
+                        boolean bl_safe = coordinatesSafe(i + incDecBy1, j - incDecBy1);
+                        boolean br_safe = coordinatesSafe(i + incDecBy1, j + incDecBy1);
+
+                        if ((tl_safe && twoDarr[i - incDecBy1][j - incDecBy1] == 'M')
+                                && (tr_safe && twoDarr[i - incDecBy1][j + incDecBy1] == 'M')
+                                && (bl_safe && twoDarr[i + incDecBy1][j - incDecBy1] == 'S')
+                                && (br_safe && twoDarr[i + incDecBy1][j + incDecBy1] == 'S')) {
+                            result++;
+                        }
+                        if ((tl_safe && twoDarr[i - incDecBy1][j - incDecBy1] == 'M')
+                                && (tr_safe && twoDarr[i - incDecBy1][j + incDecBy1] == 'S')
+                                && (bl_safe && twoDarr[i + incDecBy1][j - incDecBy1] == 'M')
+                                && (br_safe && twoDarr[i + incDecBy1][j + incDecBy1] == 'S')) {
+                            result++;
+                        }
+                        if ((tl_safe && twoDarr[i - incDecBy1][j - incDecBy1] == 'S')
+                                && (tr_safe && twoDarr[i - incDecBy1][j + incDecBy1] == 'M')
+                                && (bl_safe && twoDarr[i + incDecBy1][j - incDecBy1] == 'S')
+                                && (br_safe && twoDarr[i + incDecBy1][j + incDecBy1] == 'M')) {
+                            result++;
+                        }
+                        if ((tl_safe && twoDarr[i - incDecBy1][j - incDecBy1] == 'S')
+                                && (tr_safe && twoDarr[i - incDecBy1][j + incDecBy1] == 'S')
+                                && (bl_safe && twoDarr[i + incDecBy1][j - incDecBy1] == 'M')
+                                && (br_safe && twoDarr[i + incDecBy1][j + incDecBy1] == 'M')) {
+                            result++;
+                        }
+                    }
+                    j++;
+                }
+                i++;
+            }
+            System.out.println("result for MAS/SAM pattern: " + result);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
