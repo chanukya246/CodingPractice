@@ -1,4 +1,4 @@
-package aoc.play;
+package aoc2024.play;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,7 +10,7 @@ import java.util.List;
 public class Day5 {
 
     public static void main(String[] args) {
-        String input = "src/aoc/input/files/day5_ip.txt";
+        String input = "src/aoc2024/input/files/day5_ip.txt";
         try (BufferedReader bf = new BufferedReader(new FileReader(input))) {
             int iLine = 0, correctlyOrderedUpdates = 0, correctlyOrderedUpdatesAfterReArrange = 0;
             List<String> ruleList = new ArrayList<>();

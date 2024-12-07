@@ -1,4 +1,4 @@
-package aoc.play;
+package aoc2024.play;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

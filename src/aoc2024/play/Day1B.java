@@ -1,4 +1,4 @@
-package aoc.play;
+package aoc2024.play;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,7 +9,7 @@ import java.util.Map;
 public class Day1B {
 
     public static void main(String[] args) {
-        String filePath = "src/aoc/input/files/day1b_ip.txt"; // Replace with your file path
+        String filePath = "src/aoc2024/input/files/day1b_ip.txt"; // Replace with your file path
         int[] al1 = new int[1000];
         Map<Integer, Integer> map2 = new HashMap<>();
 

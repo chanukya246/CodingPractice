@@ -1,4 +1,4 @@
-package aoc.play;
+package aoc2024.play;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -53,7 +53,7 @@ public class Day2B_try2 {
 
     public static void main(String[] args) throws IOException  {
 
-        String filePath = "src/aoc/input/files/day2a_ip.txt"; // Replace with your file path
+        String filePath = "src/aoc2024/input/files/day2a_ip.txt"; // Replace with your file path
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -77,7 +77,7 @@ public class Day2B_try2 {
                 }
                 num_safe += safe ? 1 : 0;
             }
-            System.out.println(num_safe);
+            System.out.println("num_safe: " + num_safe);
         } catch (IOException e) {
             e.printStackTrace();
         }

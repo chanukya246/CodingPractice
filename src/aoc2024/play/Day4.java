@@ -1,4 +1,4 @@
-package aoc.play;
+package aoc2024.play;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +8,7 @@ public class Day4 {
     static long startTime;
     public static void main(String[] args) {
         startTime = System.currentTimeMillis();
-        String input = "src/aoc/input/files/day4_ip.txt";
+        String input = "src/aoc2024/input/files/day4_ip.txt";
         day4part1(input);
         day4part2(input);
     }
