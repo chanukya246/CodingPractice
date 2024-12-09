@@ -1,130 +1,159 @@
 package aoc2024.play;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class Day6 {
-
-    static int rowSize = 130;
-    static int colSize = 130;
-
-    public static void main(String[] args) {
-        String input = "src/aoc2024/input/files/day6_ip.txt";
-        day6part1(input);
+class Day6 {
+    static SimpleEntry<GuardPosition, Character[][]> parseInput(String filename) throws IOException {
+        Character[][] area = Stream.of(Files.readString(Paths.get(filename)).split("\n"))
+                .map(line -> line.chars().mapToObj(c -> (char) c).toArray(Character[]::new))
+                .toArray(Character[][]::new);
+        GuardPosition guard = IntStream.range(0, area.length)
+                .filter(r -> Arrays.stream(area[r]).anyMatch(c -> c == '^'))
+                .mapToObj(r -> new GuardPosition(r, Arrays.asList(area[r]).indexOf('^'), Direction.UP)).findFirst()
+                .get();
+        return new SimpleEntry<>(guard, area);
     }
 
-    private static void day6part1(String input) {
-        int[][] twoDarr = new int[rowSize][colSize];
-
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(input))) {
-            String guardPosition = loadAndFindGuardsPosition(bufferedReader, twoDarr);
-            String[] guardPositions = guardPosition.split(",");
-            guardTraversal(guardPositions[0], guardPositions[1], twoDarr);
-            countX(twoDarr);
-        } catch (IOException e) {
-            e.printStackTrace();
+    static Set<SimpleEntry<Integer, Integer>> patrolPositions(Character[][] area, GuardPosition guardOrig) {
+        GuardPosition guard = guardOrig.clone();
+        Set<SimpleEntry<Integer, Integer>> posSet = new HashSet<>();
+        posSet.add(guard.getPos());
+        while (guard.advance(area)) {
+            posSet.add(guard.getPos());
         }
+        return posSet;
     }
 
-    private static String loadAndFindGuardsPosition(BufferedReader br, int[][] twoDarr) throws IOException {
-        String line;
-        String guardPosition = null;
-        int i = 0;
-        while ((line = br.readLine()) != null && i < rowSize) {
-            for (int j = 0; j < colSize; j++) {
-                twoDarr[i][j] = line.charAt(j);
-                if (twoDarr[i][j] == '^') {
-                    guardPosition = (i + "," + j);
-                }
-            }
-            i++;
-        }
-        System.out.println("guard found at position: (" + guardPosition + ")");
-        return guardPosition;
-    }
-
-    private static void guardTraversal(String guardPosX, String guardPosY, int[][] twoDarr) {
-        int x = Integer.parseInt(guardPosX);
-        int y = Integer.parseInt(guardPosY);
-        boolean up = false, right = false, down = false, left = false;
-
-        while (x > 0 && y >= 0 && x < rowSize && y < colSize) {
-            if (x == 0 || x == rowSize || y == colSize) {
+    static boolean placeObstacleAndCheckLoop(Character[][] area, GuardPosition guardOrig,
+            SimpleEntry<Integer, Integer> obstaclePos) {
+        area[obstaclePos.getKey()][obstaclePos.getValue()] = '#';
+        Set<GuardPosition> posSet = new HashSet<>();
+        GuardPosition guard = guardOrig.clone();
+        boolean loop = false;
+        while (guard.advance(area)) {
+            if (posSet.contains(guard)) {
+                loop = true;
                 break;
-            } else if (twoDarr[x][y] == '^' && makeThisDirectionTrue(up)) {
-                while (twoDarr[x][y] != '#') {
-                    twoDarr[x][y] = 'X';
-                    if (x > 0 && twoDarr[x - 1][y] != '#') {
-                        x--;
-                    } else {
-                        up = false;
-                        makeThisDirectionTrue(right);
-                        break;
-                    }
+            }
+            posSet.add(guard.clone());
+        }
+        area[obstaclePos.getKey()][obstaclePos.getValue()] = '.';
+        return loop;
+    }
+
+    static long loopingObstructions(Character[][] area, GuardPosition guard,
+            Set<SimpleEntry<Integer, Integer>> allowList) {
+        return allowList.stream().filter(pos -> pos != guard.getPos() && placeObstacleAndCheckLoop(area, guard, pos))
+                .count();
+    }
+
+    public static void main(String[] args) throws IOException {
+        SimpleEntry<GuardPosition, Character[][]> input = parseInput("src/aoc2024/input/files/day6_ip.txt");
+        GuardPosition guard = input.getKey();
+        Character[][] area = input.getValue();
+
+        Set<SimpleEntry<Integer, Integer>> positions = patrolPositions(area, guard);
+
+        System.out.println("part1: " + positions.size());
+        System.out.println("part2: " + loopingObstructions(area, guard, positions));
+    }
+}
+
+enum Direction {
+    UP(-1, 0),
+    RIGHT(0, 1),
+    DOWN(1, 0),
+    LEFT(0, -1);
+
+    private final int dr;
+    private final int dc;
+
+    private Direction(int dr, int dc) {
+        this.dr = dr;
+        this.dc = dc;
+    }
+
+    public int getDr() {
+        return dr;
+    }
+
+    public int getDc() {
+        return dc;
+    }
+
+    public Direction getRight() {
+        return values()[(this.ordinal() + 1) % values().length];
+    }
+}
+
+class GuardPosition implements Cloneable {
+    public GuardPosition(int row, int col, Direction direction) {
+        this.row = row;
+        this.col = col;
+        this.direction = direction;
+    }
+
+    public SimpleEntry<Integer, Integer> getPos() {
+        return new SimpleEntry<Integer, Integer>(row, col);
+    }
+
+    public boolean advance(Character[][] patrolArea) {
+        while (true) {
+            int nr = row + direction.getDr();
+            int nc = col + direction.getDc();
+
+            if (nr >= 0 && nr < patrolArea.length && nc >= 0 && nc < patrolArea[0].length) {
+                if (patrolArea[nr][nc] == '#') {
+                    direction = direction.getRight();
+                } else {
+                    this.row = nr;
+                    this.col = nc;
+                    return true;
                 }
-            } else if (y < colSize && twoDarr[x][y] != '#' && right) {
-                while (y < colSize && twoDarr[x][y] != '#') {
-                    twoDarr[x][y] = 'X';
-                    if ((y + 1 < colSize) && twoDarr[x][y + 1] != '#') {
-                        y++;
-                    } else {
-                        right = false;
-                        makeThisDirectionTrue(down);
-                        break;
-                    }
-                }
-            } else if (x < rowSize && twoDarr[x][y] != '#' && down) {
-                while (x < rowSize && twoDarr[x][y] != '#') {
-                    twoDarr[x][y] = 'X';
-                    if ((x + 1 < rowSize) && twoDarr[x + 1][y] != '#') {
-                        x++;
-                    } else {
-                        down = false;
-                        makeThisDirectionTrue(left);
-                        break;
-                    }
-                }
-            } else if (y > 0 && twoDarr[x][y - 1] != '#' && left) {
-                while (y > 0 && twoDarr[x][y - 1] != '#') {
-                    twoDarr[x][y] = 'X';
-                    if ((y - 1 >= 0) && twoDarr[x][y - 1] != '#') {
-                        y--;
-                    } else {
-                        left = false;
-                        makeThisDirectionTrue(up);
-                        break;
-                    }
-                }
-            } else if (x > 0 && twoDarr[x - 1][y] != '#' && up) {
-                while (x > 0 && twoDarr[x - 1][y] != '#') {
-                    twoDarr[x][y] = 'X';
-                    if ((x - 1 >= 0) && twoDarr[x - 1][y] != '#') {
-                        x--;
-                    } else {
-                        up = false;
-                        makeThisDirectionTrue(right);
-                        break;
-                    }
-                }
+            } else {
+                return false;
             }
         }
     }
 
-    private static boolean makeThisDirectionTrue(boolean anyDirection) {
-        anyDirection = true;
-        return anyDirection;
+    private int row;
+    private int col;
+    private Direction direction;
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Integer.hashCode(row);
+        result = prime * result + Integer.hashCode(col);
+        result = prime * result + direction.hashCode();
+        return result;
     }
 
-    private static void countX(int[][] twoDarr) {
-        int travelled = 0;
-        for (int i = 0; i < rowSize; i++) {
-            for (int j = 0; j < colSize; j++) {
-                if (twoDarr[i][j] == 'X') {
-                    travelled++;
-                }
-            }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof GuardPosition))
+            return false;
+        GuardPosition other = (GuardPosition) obj;
+        return row == other.row && col == other.col && direction == other.direction;
+    }
+
+    @Override
+    public GuardPosition clone() {
+        try {
+            return (GuardPosition) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
         }
-        System.out.println("Total travelled: " + travelled);
     }
 }
