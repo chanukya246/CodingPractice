@@ -4,11 +4,12 @@ import java.math.BigInteger;
 
 public class Day11 {
 
-    static int blinks = 25;
+    static int TWENTY_FIVE_BLINKS = 25;
+    static int SEVENTY_FIVE_BLINKS = 75;
 
     public static void main(String[] args) {
         String input = "17639 47 3858 0 470624 9467423 5 188";
-        day11part1(input, blinks);
+        day11part1(input, TWENTY_FIVE_BLINKS);
     }
 
     private static void day11part1(String input, int blink) {
@@ -29,7 +30,7 @@ public class Day11 {
             }
             ipSplit = sb.toString().split(" ");
             blink--;
-            System.out.println("sb length is : " + ipSplit.length + ", after : " + (blinks - blink) + " blinks");
+            System.out.println("sb length is : " + ipSplit.length + ", after : " + (TWENTY_FIVE_BLINKS - blink) + " blinks");
             sb.setLength(0);
         }
 
