@@ -35,6 +35,7 @@ public class DFS_Test {
         return root;
     }
 
+    // 1. DFS - Preorder Traversal (Node → Left → Right)
     private static void preOrder(TreeNode root) {
         // base case
         if (root == null) return;
@@ -45,6 +46,7 @@ public class DFS_Test {
         preOrder(root.right);
     }
 
+    // 2. DFS - Inorder Traversal (Left → Node → Right)
     private static void inOrder(TreeNode root) {
         // base case
         if (root == null) return;
@@ -56,6 +58,7 @@ public class DFS_Test {
 
     }
 
+    // 3. DFS - Postorder Traversal (Left → Right → Node) & (Bottom -> Top)
     private static void postOrder(TreeNode root) {
         // base case
         if (root == null) return;

@@ -1,7 +1,5 @@
 package practice.com;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Stack;
 
 public class IsPalindromeLinkedList {

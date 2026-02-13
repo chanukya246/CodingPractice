@@ -10,4 +10,8 @@ public class TreeNode {
         this.val = i;
     }
 
+    public String toString() {
+        return "Node-Value : " + val;
+    }
+
 }

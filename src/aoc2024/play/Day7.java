@@ -32,7 +32,7 @@ class Day7 {
         List<BiFunction<Long, Long, Long>> opList = List.of(
                 (a, b) -> a + b,
                 (a, b) -> a * b);
-        return dfs(equation, 1, equation.getFirst(), value, opList);
+        return dfs(equation, 1, equation.get(0), value, opList);
     }
 
     static boolean dfs(List<Long> equation, int i, Long cur, Long target, List<BiFunction<Long, Long, Long>> opList) {
@@ -52,7 +52,7 @@ class Day7 {
                 (a, b) -> a + b,
                 (a, b) -> a * b,
                 CONCAT_FN);
-        return dfs(equation, 1, equation.getFirst(), value, opList);
+        return dfs(equation, 1, equation.get(0), value, opList);
     }
 
     public static void main(String[] args) throws IOException {
